@@ -1,12 +1,16 @@
 <?php
-function getenv($key) {
-    $env = file(__DIR__ . '/../admin/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($env as $line) {
-        list($k, $v) = explode('=', $line, 2);
-        if (trim($k) === $key) {
-            return trim($v);
+if (!function_exists('load_env')) {
+    function load_env() {
+        $lines = file('.env');
+        foreach ($lines as $line) {
+            if (trim($line) === '' || str_starts_with(trim($line), '#')) {
+                continue;
+            }
+            [$key, $value] = explode('=', trim($line), 2);
+            putenv(sprintf('%s=%s', $key, $value));
         }
     }
-    return null;
 }
+
+load_env();
 ?>

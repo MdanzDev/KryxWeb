@@ -1,7 +1,12 @@
 # Use an official PHP image with Apache
 FROM php:8.1-apache
 
-# Copy all website files to the Apache web directory
+# Install sendmail
+RUN apt-get update && \
+    apt-get install -y sendmail && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy application files to the Apache web directory
 COPY . /var/www/html/
 
 # Set permissions for the web directory

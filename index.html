@@ -3,16 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kryx Clan</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Kryx Clan - Unleash the Power</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #fff;
+        }
+        header {
+            background: url('https://via.placeholder.com/1920x1080') no-repeat center center/cover;
+            text-align: center;
+            padding: 100px 20px;
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: #f9d342;
+        }
+        header p {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            color: #ddd;
+        }
+        nav {
+            background-color: #000;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav .menu-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #fff;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+        }
+        nav ul li {
+            padding: 10px 0;
+        }
+        nav ul a {
+            color: #f9d342;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: #222;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+        }
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            color: #f9d342;
+            text-decoration: none;
+        }
+        .dropdown a:hover {
+            background-color: #444;
+        }
+        .visible {
+            display: block;
+        }
+        section {
+            padding: 50px 20px;
+            text-align: center;
+        }
+        footer {
+            background-color: #000;
+            color: #888;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            const dropdown = document.getElementById('dropdown-menu');
+            dropdown.classList.toggle('visible');
+        }
+    </script>
 </head>
 <body>
+    <nav>
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div id="dropdown-menu" class="dropdown">
+            <a href="login.php">Admin</a>
+            <a href="apply.html">Apply</a>
+        </div>
+    </nav>
     <header>
-        <h1>Welcome to Kryx Clan</h1>
-        <p>Your ultimate cybersecurity clan.</p>
+        <h1>Welcome to Kryx</h1>
+        <p>The ultimate clan for those who dare to conquer</p>
     </header>
+    <section class="about">
+        <h2>About Kryx</h2>
+        <p>Kryx is a community of elite players united by a shared vision: to dominate every battlefield, 
+        achieve greatness, and support one another. Whether you're a strategist, a fighter, or a builder, 
+        Kryx has a place for you.</p>
+    </section>
     <footer>
-        <p>&copy; 2025 Kryx Clan</p>
+        <p>&copy; 2025 Kryx Clan. All Rights Reserved.</p>
     </footer>
 </body>
 </html>

@@ -11,6 +11,7 @@
             padding: 0;
             background-color: #111;
             color: #fff;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         header {
@@ -61,31 +62,33 @@
             color: #fff;
         }
 
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: 50px;
-            left: 20px;
+        /* Side menu styling */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -250px; /* Initially hidden */
+            width: 250px;
+            height: 100%;
             background-color: #222;
-            border: 1px solid #333;
-            border-radius: 5px;
-            padding: 10px;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s ease-in-out; /* Slide animation */
             z-index: 1000;
         }
 
-        .dropdown a {
+        .side-menu.visible {
+            right: 0; /* Slide in */
+        }
+
+        .side-menu a {
             display: block;
-            padding: 10px;
+            padding: 15px;
             color: #f9d342;
             text-decoration: none;
+            border-bottom: 1px solid #333;
         }
 
-        .dropdown a:hover {
+        .side-menu a:hover {
             background-color: #444;
-        }
-
-        .visible {
-            display: block;
         }
 
         section {
@@ -102,8 +105,8 @@
     </style>
     <script>
         function toggleMenu() {
-            const dropdown = document.getElementById('dropdown-menu');
-            dropdown.classList.toggle('visible');
+            const sideMenu = document.getElementById('side-menu');
+            sideMenu.classList.toggle('visible');
         }
     </script>
 </head>
@@ -114,12 +117,12 @@
             <a href="apply.html" class="button">Apply</a>
         </div>
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        <div id="dropdown-menu" class="dropdown">
-            <a href="#about">Under Construction</a>
-            <a href="#contact">Under Construction</a>
-            <a href="#services">Under Construction</a>
-        </div>
     </nav>
+    <div id="side-menu" class="side-menu">
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="#services">Services</a>
+    </div>
     <header>
         <h1>Welcome to Kryx</h1>
         <p>The ultimate clan for those who dare to conquer</p>

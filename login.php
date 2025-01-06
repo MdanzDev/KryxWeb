@@ -1,6 +1,7 @@
 <?php
 require 'env-loader.php';
 session_start();
+
 if ($_POST) {
     if ($_POST['username'] === getenv('ADMIN_USER') && $_POST['password'] === getenv('ADMIN_PASS')) {
         $_SESSION['logged_in'] = true;

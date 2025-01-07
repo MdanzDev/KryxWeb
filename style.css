@@ -34,3 +34,9 @@ form button {
 form button:hover {
     background-color: #ffd700;
 }
+
+.credit {
+  font-size: 12px;
+  color: gray; /* Optional */
+}
+

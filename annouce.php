@@ -1,12 +1,11 @@
 <?php
 session_start();
 
-// Check if the user is logged in
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header('Location: login.php');
-    exit();
-}
+// Set the login status based on the session
+$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +13,191 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum Page</title>
     <style>
-        /* Your existing styles go here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: url('https://files.fm/u/ay64ch9d5h') no-repeat center center/cover;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: #f9d342;
+        }
+
+        header p {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            color: #ddd;
+        }
+
+        nav {
+            background-color: #000;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .menu-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #fff;
+            z-index: 1100;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 60px;
+            right: -250px;
+            width: 250px;
+            height: calc(100% - 60px);
+            background-color: #222;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s ease-in-out;
+            z-index: 900;
+        }
+
+        .side-menu.visible {
+            right: 0;
+        }
+
+        .side-menu a {
+            display: block;
+            padding: 15px;
+            color: #f9d342;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+        }
+
+        .side-menu a:hover {
+            background-color: #444;
+        }
+
+        section {
+            padding: 50px 20px;
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        footer {
+            background-color: #000;
+            color: #888;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .forum-post {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .forum-post h2 {
+            margin-top: 0;
+            color: #f9d342;
+        }
+
+        .forum-post p {
+            color: #ddd;
+        }
+
+        .forum-post .replies {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+
+        .forum-post .reply {
+            background-color: #444;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .post-button {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .post-button:hover {
+            background-color: #555;
+        }
+
+        .new-post {
+            margin-top: 20px;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .new-post input,
+        .new-post textarea,
+        .new-post input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .new-post button {
+            background-color: #f9d342;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .new-post button:hover {
+            background-color: #e0c336;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -168,9 +351,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             reader.readAsDataURL(file);
         }
     </script>
-
-</body>
-</html>
 
 </body>
 </html>

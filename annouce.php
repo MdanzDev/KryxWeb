@@ -30,8 +30,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
         <div class="buttons">
             <a href="#" class="button">Home</a>
-            <a href="login.php" class="button">Login</a>
-            <a href="register.php" class="button">Register</a>
+            <?php if (!$isLoggedIn): ?>
+                <a href="login.php" class="button">Login</a>
+                <a href="register.php" class="button">Register</a>
+            <?php else: ?>
+                <a href="logout.php" class="button">Logout</a>
+            <?php endif; ?>
         </div>
     </nav>
 
@@ -61,18 +65,22 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 </div>
             </div>
 
-            <!-- Reply Form -->
-            <div class="new-post">
-                <h3>Reply to this post</h3>
-                <textarea placeholder="Write your reply" id="replyContent"></textarea>
-                <input type="file" id="replyImage" onchange="previewImage(event)">
-                <img id="imagePreview" class="image-preview" />
-                <button onclick="submitReply()">Submit Reply</button>
-            </div>
+            <!-- Reply Form (only for logged-in users) -->
+            <?php if ($isLoggedIn): ?>
+                <div class="new-post">
+                    <h3>Reply to this post</h3>
+                    <textarea placeholder="Write your reply" id="replyContent"></textarea>
+                    <input type="file" id="replyImage" onchange="previewImage(event)">
+                    <img id="imagePreview" class="image-preview" />
+                    <button onclick="submitReply()">Submit Reply</button>
+                </div>
+            <?php else: ?>
+                <p>You must be logged in to reply to this post.</p>
+            <?php endif; ?>
         </div>
 
-        <!-- Only show this if the user is logged in -->
-        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+        <!-- Create New Post Form (only for logged-in users) -->
+        <?php if ($isLoggedIn): ?>
             <div class="new-post">
                 <h3>Clan Announcement</h3>
                 <input type="text" placeholder="Post Title" id="postTitle" value="Clan Announcement" disabled>
@@ -82,9 +90,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 <button onclick="submitPost()">Submit Post</button>
             </div>
         <?php else: ?>
-            <p>You must be logged in to make posts.</p>
+            <p>You must be logged in to create a new post.</p>
         <?php endif; ?>
-
     </section>
 
     <!-- Footer -->
@@ -161,6 +168,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             reader.readAsDataURL(file);
         }
     </script>
+
+</body>
+</html>
 
 </body>
 </html>

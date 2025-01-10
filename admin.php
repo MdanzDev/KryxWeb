@@ -45,5 +45,6 @@ $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tbody>
     </table>
     <a href="logout.php">Logout</a>
+        <a href="annouce.php">Annouce</a>
 </body>
 </html>

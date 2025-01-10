@@ -1,8 +1,33 @@
 <?php
 session_start();
 
-// Set the login status based on the session
+// Connect to the SQLite database
+$db = new PDO('sqlite:forum.db');
+
+// Check if the user is logged in
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_post'])) {
+    $title = $_POST['postTitle'];
+    $content = $_POST['postContent'];
+    $stmt = $db->prepare("INSERT INTO posts (title, content) VALUES (:title, :content)");
+    $stmt->bindParam(':title', $title);
+    $stmt->bindParam(':content', $content);
+    $stmt->execute();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_reply'])) {
+    $postId = $_POST['postId'];
+    $replyContent = $_POST['replyContent'];
+    $stmt = $db->prepare("INSERT INTO replies (post_id, content) VALUES (:post_id, :content)");
+    $stmt->bindParam(':post_id', $postId);
+    $stmt->bindParam(':content', $replyContent);
+    $stmt->execute();
+}
+?>
+<?php
+// Fetch posts from the database
+$posts = $db->query("SELECT * FROM posts ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 

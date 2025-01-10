@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_reply'])) {
 $posts = $db->query("SELECT * FROM posts ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,81 +64,10 @@ $posts = $db->query("SELECT * FROM posts ORDER BY created_at DESC")->fetchAll(PD
             color: #ddd;
         }
 
-        nav {
-            background-color: #000;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .button {
-            background-color: red;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .menu-icon {
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #fff;
-            z-index: 1100;
-        }
-
-        .side-menu {
-            position: fixed;
-            top: 60px;
-            right: -250px;
-            width: 250px;
-            height: calc(100% - 60px);
-            background-color: #222;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-            transition: right 0.3s ease-in-out;
-            z-index: 900;
-        }
-
-        .side-menu.visible {
-            right: 0;
-        }
-
-        .side-menu a {
-            display: block;
-            padding: 15px;
-            color: #f9d342;
-            text-decoration: none;
-            border-bottom: 1px solid #333;
-        }
-
-        .side-menu a:hover {
-            background-color: #444;
-        }
-
         section {
             padding: 50px 20px;
             text-align: center;
             margin-top: 70px;
-        }
-
-        footer {
-            background-color: #000;
-            color: #888;
-            padding: 20px 0;
-            text-align: center;
         }
 
         .forum-post {
@@ -159,30 +87,16 @@ $posts = $db->query("SELECT * FROM posts ORDER BY created_at DESC")->fetchAll(PD
             color: #ddd;
         }
 
-        .forum-post .replies {
+        .replies {
             margin-top: 20px;
             padding-left: 20px;
         }
 
-        .forum-post .reply {
+        .reply {
             background-color: #444;
             margin-top: 10px;
             padding: 10px;
             border-radius: 5px;
-        }
-
-        .post-button {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .post-button:hover {
-            background-color: #555;
         }
 
         .new-post {
@@ -193,8 +107,7 @@ $posts = $db->query("SELECT * FROM posts ORDER BY created_at DESC")->fetchAll(PD
         }
 
         .new-post input,
-        .new-post textarea,
-        .new-post input[type="file"] {
+        .new-post textarea {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -212,17 +125,6 @@ $posts = $db->query("SELECT * FROM posts ORDER BY created_at DESC")->fetchAll(PD
             cursor: pointer;
             border-radius: 5px;
         }
-
-        .new-post button:hover {
-            background-color: #e0c336;
-        }
-
-        .image-preview {
-            max-width: 100%;
-            max-height: 200px;
-            margin-top: 10px;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -233,149 +135,58 @@ $posts = $db->query("SELECT * FROM posts ORDER BY created_at DESC")->fetchAll(PD
         <p>Discuss anything and everything</p>
     </header>
 
-    <!-- Navigation Bar -->
-    <nav>
-        <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        <div class="buttons">
-            <a href="#" class="button">Home</a>
-            <?php if (!$isLoggedIn): ?>
-                <a href="login.php" class="button">Login</a>
-                <a href="register.php" class="button">Register</a>
-            <?php else: ?>
-                <a href="logout.php" class="button">Logout</a>
-            <?php endif; ?>
-        </div>
-    </nav>
-
-    <!-- Side Menu -->
-    <div id="sideMenu" class="side-menu">
-        <a href="#">Forum</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-    </div>
-
     <!-- Main Content Section -->
     <section>
         <h2>Recent Discussions</h2>
 
-        <!-- Forum Posts -->
-        <div class="forum-post">
-            <h2>How to get started with coding?</h2>
-            <p>This is a beginner-friendly discussion about the best resources for learning how to code. Feel free to share your tips!</p>
+        <!-- Display Forum Posts -->
+        <?php foreach ($posts as $post): ?>
+            <div class="forum-post">
+                <h2><?= htmlspecialchars($post['title']); ?></h2>
+                <p><?= htmlspecialchars($post['content']); ?></p>
 
-            <!-- Replies Section -->
-            <div class="replies">
-                <div class="reply">
-                    <p><strong>User1:</strong> I recommend starting with Python. It's beginner-friendly!</p>
+                <!-- Display Replies -->
+                <div class="replies">
+                    <?php
+                    $postId = $post['id'];
+                    $replies = $db->query("SELECT * FROM replies WHERE post_id = $postId ORDER BY created_at ASC")->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($replies as $reply): ?>
+                        <div class="reply">
+                            <p><?= htmlspecialchars($reply['content']); ?></p>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <div class="reply">
-                    <p><strong>User2:</strong> Absolutely! Python is great for building foundational skills.</p>
-                </div>
+
+                <!-- Reply Form (Visible if logged in) -->
+                <?php if ($isLoggedIn): ?>
+                    <div class="new-post">
+                        <h3>Reply to this post</h3>
+                        <form method="POST">
+                            <textarea name="replyContent" placeholder="Write your reply" required></textarea>
+                            <input type="hidden" name="postId" value="<?= $post['id']; ?>">
+                            <button type="submit" name="submit_reply">Submit Reply</button>
+                        </form>
+                    </div>
+                <?php else: ?>
+                    <p>You must be logged in to reply to this post.</p>
+                <?php endif; ?>
             </div>
+        <?php endforeach; ?>
 
-            <!-- Reply Form (only for logged-in users) -->
-            <?php if ($isLoggedIn): ?>
-                <div class="new-post">
-                    <h3>Reply to this post</h3>
-                    <textarea placeholder="Write your reply" id="replyContent"></textarea>
-                    <input type="file" id="replyImage" onchange="previewImage(event)">
-                    <img id="imagePreview" class="image-preview" />
-                    <button onclick="submitReply()">Submit Reply</button>
-                </div>
-            <?php else: ?>
-                <p>You must be logged in to reply to this post.</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Create New Post Form (only for logged-in users) -->
+        <!-- New Post Form (Visible if logged in) -->
         <?php if ($isLoggedIn): ?>
             <div class="new-post">
-                <h3>Clan Announcement</h3>
-                <input type="text" placeholder="Post Title" id="postTitle" value="Clan Announcement" disabled>
-                <textarea placeholder="Post Content" id="postContent"></textarea>
-                <input type="file" id="postImage" onchange="previewPostImage(event)">
-                <img id="postImagePreview" class="image-preview" />
-                <button onclick="submitPost()">Submit Post</button>
+                <h3>Create a New Post</h3>
+                <form method="POST">
+                    <input type="text" name="postTitle" placeholder="Post Title" required>
+                    <textarea name="postContent" placeholder="Post Content" required></textarea>
+                    <button type="submit" name="submit_post">Submit Post</button>
+                </form>
             </div>
         <?php else: ?>
             <p>You must be logged in to create a new post.</p>
         <?php endif; ?>
     </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Forum Page | All Rights Reserved</p>
-    </footer>
-
-    <!-- Script for menu toggle and handling replies/images -->
-    <script>
-        function toggleMenu() {
-            const sideMenu = document.getElementById('sideMenu');
-            sideMenu.classList.toggle('visible');
-        }
-
-        function submitPost() {
-            const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
-            const image = document.getElementById('postImage').files[0];
-
-            if (title && content) {
-                const forumSection = document.querySelector('section');
-                const newPost = document.createElement('div');
-                newPost.classList.add('forum-post');
-                newPost.innerHTML = `<h2>${title}</h2><p>${content}</p>`;
-                if (image) {
-                    newPost.innerHTML += `<img src="${URL.createObjectURL(image)}" alt="Post Image" style="max-width: 100%; margin-top: 10px;">`;
-                }
-                forumSection.insertBefore(newPost, forumSection.querySelector('.new-post'));
-                document.getElementById('postTitle').value = '';
-                document.getElementById('postContent').value = '';
-                document.getElementById('postImage').value = '';
-            }
-        }
-
-        function submitReply() {
-            const replyContent = document.getElementById('replyContent').value;
-            const replyImage = document.getElementById('replyImage').files[0];
-
-            if (replyContent) {
-                const forumPost = document.querySelector('.forum-post');
-                const repliesSection = forumPost.querySelector('.replies');
-                const newReply = document.createElement('div');
-                newReply.classList.add('reply');
-                newReply.innerHTML = `<p><strong>You:</strong> ${replyContent}</p>`;
-                if (replyImage) {
-                    newReply.innerHTML += `<img src="${URL.createObjectURL(replyImage)}" alt="Reply Image" style="max-width: 100%; margin-top: 10px;">`;
-                }
-                repliesSection.appendChild(newReply);
-                document.getElementById('replyContent').value = '';
-                document.getElementById('replyImage').value = '';
-                document.getElementById('imagePreview').style.display = 'none';
-            }
-        }
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function() {
-                const imagePreview = document.getElementById('imagePreview');
-                imagePreview.src = reader.result;
-                imagePreview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function previewPostImage(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function() {
-                const postImagePreview = document.getElementById('postImagePreview');
-                postImagePreview.src = reader.result;
-                postImagePreview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    </script>
 
 </body>
 </html>
